@@ -35,7 +35,7 @@ void parseRDBMessage( RDB_MSG_t* msg, bool & isImage );
 void parseRDBMessageEntry( const double & simTime, const unsigned int & simFrame, RDB_MSG_ENTRY_HDR_t* entryHdr );
 void handleRDBitem( const double & simTime, const unsigned int & simFrame, RDB_OBJECT_STATE_t & item, bool isExtended );
 void handleRDBitem( const double & simTime, const unsigned int & simFrame, RDB_ROAD_POS_t & item );
-void handleRDBitem( const double & simTime, const unsigned int & simFrame, RDB_IMAGE_t & item );
+// void handleRDBitem( const double & simTime, const unsigned int & simFrame, RDB_IMAGE_t & item );
 void sendTrigger( int & sendSocket, const double & simTime, const unsigned int & simFrame );
 
 
@@ -287,7 +287,7 @@ void parseRDBMessageEntry( const double & simTime, const unsigned int & simFrame
             case RDB_PKG_ID_START_OF_FRAME:
             {
                 // fprintf( stderr, "void parseRDBMessageEntry: got start of frame\n" );
-                surVeh_info.clear()
+                surVeh_info.clear();
                 ego_info.lane_posi_ = 4;
                 break;
             }
@@ -337,7 +337,7 @@ void parseRDBMessageEntry( const double & simTime, const unsigned int & simFrame
                 break;
 */                    
             case RDB_PKG_ID_ROAD_POS:
-                handleRDBitem( simTime, simFrame, *( ( RDB_ROAD_POS_t* ) dataPtr ) )
+                handleRDBitem( simTime, simFrame, *( ( RDB_ROAD_POS_t* ) dataPtr ) );
                 // print( *( ( RDB_ROAD_POS_t* ) dataPtr ), ident );
                 break;
 /*                    
@@ -404,12 +404,12 @@ void parseRDBMessageEntry( const double & simTime, const unsigned int & simFrame
             case RDB_PKG_ID_ROAD_STATE:
                 print( *( ( RDB_ROAD_STATE_t* ) dataPtr ), ident );
                 break;
-*/                    
+                  
             case RDB_PKG_ID_IMAGE:
             case RDB_PKG_ID_LIGHT_MAP:
                 handleRDBitem( simTime, simFrame, *( ( RDB_IMAGE_t* ) dataPtr ) );
                 break;
-/*                    
+                   
             case RDB_PKG_ID_LIGHT_SOURCE:
                 print( *( ( RDB_LIGHT_SOURCE_t* ) dataPtr ), entryHdr->flags & RDB_PKG_FLAG_EXTENDED, ident );
                 break;
@@ -490,15 +490,15 @@ void handleRDBitem( const double & simTime, const unsigned int & simFrame, RDB_O
     }
     if (item.base.id != 1) // other vehicel info
     {
-        surVeh_input_.push_back(item.base.pos.x);
-        surVeh_input_.push_back(item.base.pos.y);
-        surVeh_input_.push_back(item.base.geo.dimX);
-        surVeh_input_.push_back(item.base.geo.dimY);
-        surVeh_input_.push_back(item.ext.speed.x);
-        surVeh_input_.push_back(item.ext.speed.y);
-        surVeh_input_.push_back(item.ext.accel.x);
-        surVeh_input_.push_back(item.ext.accel.y);
-        surVeh_input_.push_back(item.base.pos.h - 1.57);//relative to Y axis
+        surVeh_info.push_back(item.base.pos.x);
+        surVeh_info.push_back(item.base.pos.y);
+        surVeh_info.push_back(item.base.geo.dimX);
+        surVeh_info.push_back(item.base.geo.dimY);
+        surVeh_info.push_back(item.ext.speed.x);
+        surVeh_info.push_back(item.ext.speed.y);
+        surVeh_info.push_back(item.ext.accel.x);
+        surVeh_info.push_back(item.ext.accel.y);
+        surVeh_info.push_back(item.base.pos.h - 1.57);//relative to Y axis
     }
 }
 
@@ -511,21 +511,21 @@ void handleRDBitem( const double & simTime, const unsigned int & simFrame, RDB_R
         }
 }
 
-void handleRDBitem( const double & simTime, const unsigned int & simFrame, RDB_IMAGE_t & item )
-{
-  fprintf( stderr, "handleRDBitem: handling image data\n" );
-  fprintf( stderr, "    simTime = %.3lf, simFrame = %ld\n", simTime, simFrame );
-  fprintf( stderr, "    id = %d, width = %d, height = %d\n", item.id, item.width, item.height );
-  fprintf( stderr, "    pixelSize = %d, pixelFormat = %d, imgSize = %d\n", item.pixelSize, item.pixelFormat, item.imgSize );
+// void handleRDBitem( const double & simTime, const unsigned int & simFrame, RDB_IMAGE_t & item )
+// {
+//   fprintf( stderr, "handleRDBitem: handling image data\n" );
+//   fprintf( stderr, "    simTime = %.3lf, simFrame = %ld\n", simTime, simFrame );
+//   fprintf( stderr, "    id = %d, width = %d, height = %d\n", item.id, item.width, item.height );
+//   fprintf( stderr, "    pixelSize = %d, pixelFormat = %d, imgSize = %d\n", item.pixelSize, item.pixelFormat, item.imgSize );
 
-  // write image to file
-  unsigned char* imgData = ( unsigned char* ) ( &item );
-  imgData += sizeof( RDB_IMAGE_t );
+//   // write image to file
+//   unsigned char* imgData = ( unsigned char* ) ( &item );
+//   imgData += sizeof( RDB_IMAGE_t );
   
-  /* here could be a routine to process the image data, e.g.
-  processImgData( item.width, item.height, item.pixelSize, item.pixelFormat, item.imgSize, imgData, simFrame );
-  */
-}
+//   /* here could be a routine to process the image data, e.g.
+//   processImgData( item.width, item.height, item.pixelSize, item.pixelFormat, item.imgSize, imgData, simFrame );
+//   */
+// }
 
 
 void sendTrigger( int & sendSocket, const double & simTime, const unsigned int & simFrame )

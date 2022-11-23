@@ -2,4 +2,4 @@
 
 # compile the RDB client example
 
-g++ -o sampleClientRDB ../Common/RDBHandler.cc ExampleConsole.cpp -I../Common/
+g++ -o sampleClientRDB ./vtd/RDBHandler.cc RDB_read.cpp -I./vtd/
