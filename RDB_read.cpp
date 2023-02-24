@@ -23,11 +23,20 @@
 
 char  szServer[128];             // Server to connect to
 int   iPort     = DEFAULT_PORT;  // Port on server to connect to
-std::string file_path = "output/data.csv";   //存文件的路径
+
 std::ofstream file;
 Vehicle ego_info;
 std::vector<double> surVeh_info;
-int surVeh_num = 1;
+
+
+/*--------------------需要自定义的地方--------------------*/
+// 保存文件路径（如果存在同名文件，将直接替换）
+std::string file_path = "output/data.csv"; 
+
+// 定义背景车数量
+int surVeh_num = 0;
+/*-----------------------------------------------------*/
+
 
 
 // function prototypes
